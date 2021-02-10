@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nothing: {fileID: 2100000, guid: 326b6cec07614a144a59b7aa91d08486, type: 2}
   wall: {fileID: 2100000, guid: 5a868a546bcee6142a6f981e82e830b1, type: 2}
+  selected: {fileID: 2100000, guid: 4fbc448e0fa48714b93dbed76955fa10, type: 2}
 --- !u!4 &456861013
 Transform:
   m_ObjectHideFlags: 0
