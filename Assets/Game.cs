@@ -57,15 +57,26 @@ public class Game : MonoBehaviour
 
     public void Click(Vector2 position)
     {
-        //Debug.Log("Click " + position.x + " - " + position.y);
-        if (pole[(int)position.x,(int)position.y] == 0)
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            ArrayChange(target, 0);
-            //ChangeColor(target, wall);
-            target = position;
-            ArrayChange(target, -2);
-            //ChangeColor(target, selected);
+            if (pole[(int)position.x, (int)position.y] == 0)
+            {
+                ArrayChange(target, 0);
+                //ChangeColor(target, wall);
+                target = position;
+                ArrayChange(target, -2);
+                //ChangeColor(target, selected);
+            }
         }
+        else
+        {
+            if (pole[(int)position.x, (int)position.y] != -2)
+            {
+                ArrayChange(position, pole[(int)position.x, (int)position.y] == 0 ? -1 : 0);
+            }
+        }
+        //Debug.Log("Click " + position.x + " - " + position.y);
+        
         
 
         
