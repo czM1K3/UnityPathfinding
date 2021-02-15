@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 public class Game : MonoBehaviour
@@ -58,7 +59,6 @@ public class Game : MonoBehaviour
                 ArrayChange(target, 0);
                 target = position;
                 ArrayChange(target, -2);
-                Vlna((int[,])pole.Clone(), ps.GetPos());
             }
         }
         else
@@ -68,6 +68,7 @@ public class Game : MonoBehaviour
                 ArrayChange(position, pole[(int)position.x, (int)position.y] == 0 ? -1 : 0);
             }
         }
+        Vlna((int[,])pole.Clone(), ps.GetPos());
     }
 
     void ArrayChange(Vector2 position, int target)
@@ -107,7 +108,6 @@ public class Game : MonoBehaviour
         var a = GetCesta(pole, vlna);
         a.Reverse();
         ps.NextMoves = new Queue<Vector2>(a);
-        Debug.Log("Got it");
     }
 
     bool GetVlna(int vlna, int[,] pole)
@@ -147,27 +147,27 @@ public class Game : MonoBehaviour
     List<Vector2> GetCesta(int[,] pole, int vlna)
     {
         List<Vector2> cesta = new List<Vector2>();
-        Vector2 end = new Vector2();
-        for (int i = 0; i < pole.GetLength(0); i++) for (int j = 0; j < pole.GetLength(1); j++) if (pole[j, i] == -2) end = new Vector2(j, i);
-        cesta.Add(end);
+        Point end = new Point();
+        for (int i = 0; i < pole.GetLength(0); i++) for (int j = 0; j < pole.GetLength(1); j++) if (pole[j, i] == -2) end = new Point(i, j);
+        cesta.Add(new Vector2(end.X, end.Y));
         for (int i = vlna; i >= 1; i--)
         {
-            Vector2 posledni = cesta[cesta.Count - 1];
-            if (posledni.x - 1 >= 0 && pole[(int)posledni.x - 1, (int)posledni.y] == i)
+            Point posledni = new Point((int)cesta[cesta.Count - 1].y, (int)cesta[cesta.Count - 1].x);
+            if (posledni.X - 1 >= 0 && pole[posledni.X - 1, posledni.Y] == i)
             {
-                cesta.Add(new Vector2(posledni.y, posledni.x - 1));
+                cesta.Add(new Vector2(posledni.Y, posledni.X - 1));
             }
-            else if (posledni.x + 1 < pole.GetLength(0) && pole[(int)posledni.x + 1, (int)posledni.y] == i)
+            else if (posledni.X + 1 < pole.GetLength(0) && pole[posledni.X + 1, posledni.Y] == i)
             {
-                cesta.Add(new Vector2(posledni.y, posledni.x + 1));
+                cesta.Add(new Vector2(posledni.Y, posledni.X + 1));
             }
-            else if (posledni.y - 1 >= 0 && pole[(int)posledni.x, (int)posledni.y - 1] == i)
+            else if (posledni.Y - 1 >= 0 && pole[posledni.X, posledni.Y - 1] == i)
             {
-                cesta.Add(new Vector2(posledni.y - 1, posledni.x));
+                cesta.Add(new Vector2(posledni.Y - 1, posledni.X));
             }
-            else if (posledni.y + 1 < pole.GetLength(1) && pole[(int)posledni.x, (int)posledni.y + 1] == i)
+            else if (posledni.Y + 1 < pole.GetLength(1) && pole[posledni.X, posledni.Y + 1] == i)
             {
-                cesta.Add(new Vector2(posledni.y + 1, posledni.x));
+                cesta.Add(new Vector2(posledni.Y + 1, posledni.X));
             }
         }
         return cesta;
