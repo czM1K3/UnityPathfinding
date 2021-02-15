@@ -13,6 +13,8 @@ public class Game : MonoBehaviour
 
     private Vector2 target;
 
+    public PlayerScript ps;
+
     GameObject[,] poleBackground;
     void Start()
     {
@@ -38,21 +40,13 @@ public class Game : MonoBehaviour
             for (int j = 0; j < poleBackground.GetLength(1); j++)
             {
                 poleBackground[i, j] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                poleBackground[i, j].transform.position = new Vector3(
-                    ((float) i * offset) - (poleBackground.GetLength(0) / 2 / offset),
-                    ((float) j * offset) - (poleBackground.GetLength(1) / 2 / offset)
-                    );
+                poleBackground[i, j].transform.position = new Vector3((float) i, (float) j);
                 poleBackground[i, j].name = i + "-" + j;
                 ChangeColor(i, j, pole[i, j] == -1 ? nothing : wall);
                 ClickEvent clickEvent = poleBackground[i, j].AddComponent(typeof(ClickEvent)) as ClickEvent;
                 clickEvent.instructor = this;
             }
         }
-    }
-
-    void Update()
-    {
-        
     }
 
     public void Click(Vector2 position)
@@ -62,10 +56,9 @@ public class Game : MonoBehaviour
             if (pole[(int)position.x, (int)position.y] == 0)
             {
                 ArrayChange(target, 0);
-                //ChangeColor(target, wall);
                 target = position;
                 ArrayChange(target, -2);
-                //ChangeColor(target, selected);
+                Vlna((int[,])pole.Clone(), ps.GetPos());
             }
         }
         else
@@ -75,11 +68,6 @@ public class Game : MonoBehaviour
                 ArrayChange(position, pole[(int)position.x, (int)position.y] == 0 ? -1 : 0);
             }
         }
-        //Debug.Log("Click " + position.x + " - " + position.y);
-        
-        
-
-        
     }
 
     void ArrayChange(Vector2 position, int target)
@@ -105,5 +93,83 @@ public class Game : MonoBehaviour
     void ChangeColor(int x, int y, Material newMaterial)
     {
         poleBackground[x, y].GetComponent<Renderer>().material = newMaterial;
+    }
+
+    void Vlna(int[,] pole, Vector2 pos)
+    {
+        int vlna = 1;
+        pole[(int)pos.x, (int)pos.y] = 1;
+        while (GetVlna(vlna, pole))
+        {
+            vlna++;
+            if (vlna > 1000) return;
+        }
+        var a = GetCesta(pole, vlna);
+        a.Reverse();
+        ps.NextMoves = new Queue<Vector2>(a);
+        Debug.Log("Got it");
+    }
+
+    bool GetVlna(int vlna, int[,] pole)
+    {
+        for (int i = 0; i < pole.GetLength(0); i++)
+        {
+            for (int j = 0; j < pole.GetLength(1); j++)
+            {
+                if (pole[i, j] == vlna)
+                {
+                    if (i - 1 >= 0 && (pole[i - 1, j] == 0 || pole[i - 1, j] == -2))
+                    {
+                        if (pole[i - 1, j] == -2) return false;
+                        pole[i - 1, j] = vlna + 1;
+                    }
+                    if (i + 1 < pole.GetLength(0) && (pole[i + 1, j] == 0 || pole[i + 1, j] == -2))
+                    {
+                        if (pole[i + 1, j] == -2) return false;
+                        pole[i + 1, j] = vlna + 1;
+                    }
+                    if (j - 1 >= 0 && (pole[i, j - 1] == 0 || pole[i, j - 1] == -2))
+                    {
+                        if (pole[i, j - 1] == -2) return false;
+                        pole[i, j - 1] = vlna + 1;
+                    }
+                    if (j + 1 < pole.GetLength(1) && (pole[i, j + 1] == 0 || pole[i, j + 1] == -2))
+                    {
+                        if (pole[i, j + 1] == -2) return false;
+                        pole[i, j + 1] = vlna + 1;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    List<Vector2> GetCesta(int[,] pole, int vlna)
+    {
+        List<Vector2> cesta = new List<Vector2>();
+        Vector2 end = new Vector2();
+        for (int i = 0; i < pole.GetLength(0); i++) for (int j = 0; j < pole.GetLength(1); j++) if (pole[j, i] == -2) end = new Vector2(j, i);
+        cesta.Add(end);
+        for (int i = vlna; i >= 1; i--)
+        {
+            Vector2 posledni = cesta[cesta.Count - 1];
+            if (posledni.x - 1 >= 0 && pole[(int)posledni.x - 1, (int)posledni.y] == i)
+            {
+                cesta.Add(new Vector2(posledni.y, posledni.x - 1));
+            }
+            else if (posledni.x + 1 < pole.GetLength(0) && pole[(int)posledni.x + 1, (int)posledni.y] == i)
+            {
+                cesta.Add(new Vector2(posledni.y, posledni.x + 1));
+            }
+            else if (posledni.y - 1 >= 0 && pole[(int)posledni.x, (int)posledni.y - 1] == i)
+            {
+                cesta.Add(new Vector2(posledni.y - 1, posledni.x));
+            }
+            else if (posledni.y + 1 < pole.GetLength(1) && pole[(int)posledni.x, (int)posledni.y + 1] == i)
+            {
+                cesta.Add(new Vector2(posledni.y + 1, posledni.x));
+            }
+        }
+        return cesta;
     }
 }
