@@ -20,19 +20,30 @@ public class Game : MonoBehaviour
     void Start()
     {
         int[,] newPole = {
-            { 0, 0, 0, 0, -1, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, -1, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0,  0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, -1, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, -1,-1,-1, 0,-1,-1 },
-            { 0, 0, 0, 0, -1, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, -1, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, -1, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, -1, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, -1, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0,-1, 0, 0, 0, 0, 0,-1, 0, 0, 0 },
+            {-1,-1,-1,-1,-1,-1, 0,-1, 0,-1, 0,-1, 0,-1, 0,-1,-1,-1, 0,-1, 0 },
+            { 0, 0, 0, 0, 0,-1, 0, 0, 0,-1, 0,-1, 0,-1, 0, 0, 0, 0, 0,-1, 0 },
+            { 0,-1, 0,-1, 0,-1,-1,-1,-1,-1, 0,-1, 0,-1,-1,-1,-1,-1,-1,-1, 0 },
+            { 0,-1, 0,-1, 0,-1, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0,-1, 0, 0, 0 },
+            {-1,-1, 0,-1, 0,-1, 0,-1,-1,-1,-1,-1,-1,-1, 0,-1,-1,-1, 0,-1, 0 },
+            { 0, 0, 0,-1, 0,-1, 0, 0, 0, 0, 0,-1, 0, 0, 0,-1, 0, 0, 0,-1, 0 },
+            { 0,-1,-1,-1, 0,-1,-1,-1,-1,-1, 0,-1, 0,-1,-1,-1, 0,-1,-1,-1, 0 },
+            { 0,-1, 0, 0, 0, 0, 0,-1, 0,-1, 0,-1, 0,-1, 0, 0, 0,-1, 0,-1, 0 },
+            { 0,-1,-1,-1,-1,-1, 0,-1, 0,-1, 0,-1,-1,-1, 0,-1,-1,-1, 0,-1, 0 },
+            { 0, 0, 0, 0, 0,-1, 0, 0, 0,-1, 0,-1, 0, 0, 0,-1, 0, 0, 0,-1, 0 },
+            { 0,-1,-1,-1, 0,-1,-1,-1,-1,-1, 0,-1, 0,-1,-1,-1,-1,-1, 0,-1, 0 },
+            { 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0, 0, 0,-1, 0,-1, 0 },
+            {-1,-1, 0,-1,-1,-1,-1,-1,-1,-1,-1,-1, 0,-1, 0,-1, 0,-1, 0,-1, 0 },
+            { 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0,-1, 0, 0, 0,-1, 0 },
+            { 0,-1,-1,-1,-1,-1, 0,-1,-1,-1, 0,-1, 0,-1, 0,-1,-1,-1, 0,-1, 0 },
+            { 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0,-1, 0, 0, 0,-1, 0, 0, 0,-1, 0 },
+            {-1,-1,-1,-1,-1,-1,-1,-1, 0,-1,-1,-1, 0,-1,-1,-1, 0,-1,-1,-1, 0 },
+            { 0, 0, 0,-1, 0, 0, 0,-1, 0, 0, 0,-1, 0, 0, 0,-1, 0,-1, 0,-1, 0 },
+            { 0,-1,-1,-1, 0,-1, 0,-1,-1,-1, 0,-1,-1,-1,-1,-1, 0,-1, 0,-1, 0 },
+            { 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0 },
         };
         pole = newPole;
-        target = new Vector2(7, 8);
+        target = new Vector2(0, 0);
         pole[(int)target.x, (int)target.y] = -2;
 
         poleBackground = new GameObject[pole.GetLength(0), pole.GetLength(1)];
@@ -43,7 +54,7 @@ public class Game : MonoBehaviour
                 poleBackground[i, j] = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 poleBackground[i, j].transform.position = new Vector3((float) i, (float) j);
                 poleBackground[i, j].name = i + "-" + j;
-                ChangeColor(i, j, pole[i, j] == -1 ? nothing : wall);
+                ChangeColor(i, j, pole[i, j] == -1 ? wall : nothing);
                 ClickEvent clickEvent = poleBackground[i, j].AddComponent(typeof(ClickEvent)) as ClickEvent;
                 clickEvent.instructor = this;
             }
@@ -80,9 +91,9 @@ public class Game : MonoBehaviour
     {
         pole[x, y] = target;
         Material newMaterial;
-        if (target == -1) newMaterial = nothing;
+        if (target == -1) newMaterial = wall;
         else if (target == -2) newMaterial = selected;
-        else newMaterial = wall;
+        else newMaterial = nothing;
         ChangeColor(x, y, newMaterial);
     }
 
@@ -148,7 +159,7 @@ public class Game : MonoBehaviour
     {
         List<Vector2> cesta = new List<Vector2>();
         Point end = new Point();
-        for (int i = 0; i < pole.GetLength(0); i++) for (int j = 0; j < pole.GetLength(1); j++) if (pole[j, i] == -2) end = new Point(i, j);
+        for (int i = 0; i < pole.GetLength(1); i++) for (int j = 0; j < pole.GetLength(0); j++) if (pole[j, i] == -2) end = new Point(i, j);
         cesta.Add(new Vector2(end.X, end.Y));
         for (int i = vlna; i >= 1; i--)
         {
