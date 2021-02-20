@@ -117,7 +117,11 @@ public class Game : MonoBehaviour
         while (GetVlna(vlna, pole))
         {
             vlna++;
-            if (vlna > 1000) return;
+            if (vlna > 1000)
+            {
+                ps.NextMoves = new Queue<Vector2>();
+                return;
+            }
         }
         var a = GetCesta(pole, vlna);
         a.Reverse();
