@@ -10,7 +10,7 @@ public class Game : MonoBehaviour
     public Material nothing, wall, selected;
     //public GameObject clickEvent;
 
-    private int[,] pole;
+    public int[,] pole;
 
     private Vector2 target;
 
