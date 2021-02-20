@@ -91,9 +91,12 @@ public class Game : MonoBehaviour
     {
         pole[x, y] = target;
         Material newMaterial;
-        if (target == -1) newMaterial = wall;
-        else if (target == -2) newMaterial = selected;
-        else newMaterial = nothing;
+        switch (target)
+        {
+            case -1: newMaterial = wall; break;
+            case -2: newMaterial = selected; break;
+            default: newMaterial = nothing; break;
+        }
         ChangeColor(x, y, newMaterial);
     }
 
