@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class PlayerScript : MonoBehaviour
     void Start()
     { 
         NextMoves = new Queue<Vector2>();
-        InvokeRepeating("Move", 0, 0.2f);
+        InvokeRepeating("Move", 0, 0.002f);
     }
 
     void Move()
@@ -23,17 +24,17 @@ public class PlayerScript : MonoBehaviour
             else if (NextMoves.Peek().y < transform.position.x) GoTo(Vector3.left);
             //Debug.Log(NextMoves.Peek().x + ";" + NextMoves.Peek().y);
 
-            if (NextMoves.Peek().x == transform.position.y && NextMoves.Peek().y == transform.position.x)NextMoves.Dequeue();
+            if (NextMoves.Peek().x == Math.Round(transform.position.y,2) && NextMoves.Peek().y == Math.Round(transform.position.x, 2)) NextMoves.Dequeue();
         }
     }
 
     void GoTo(Vector3 way)
     {
-        transform.position += way;
+        transform.position += way * 0.01f;
     }
 
     public Vector2 GetPos()
     {
-        return new Vector2(transform.position.x, transform.position.y);
+        return new Vector2((float)Math.Round(transform.position.x, 2), (float)Math.Round(transform.position.y, 2));
     }
 }
