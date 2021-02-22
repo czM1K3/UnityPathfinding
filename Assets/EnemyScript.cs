@@ -29,6 +29,11 @@ public class EnemyScript : MonoBehaviour
 
             if (NextMoves.Peek().x == Math.Round(transform.position.y, 2) && NextMoves.Peek().y == Math.Round(transform.position.x, 2)) NextMoves.Dequeue();
         }
+        else if (NextMoves.Count <= 1)
+        {
+            Application.Quit();
+            Debug.Log("Konec");
+        }
     }
 
     void GoTo(Vector3 way)
